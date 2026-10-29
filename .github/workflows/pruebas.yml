@@ -17,4 +17,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium firefox
+      # Sin tarjeta de sonido, el reloj de audio de Firefox no avanza y el barrido del test no se mueve:
+      # una salida de sonido virtual hace de altavoz, como en un equipo normal.
+      - name: Salida de sonido virtual
+        run: |
+          sudo apt-get install -y pulseaudio
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=virtual
+          pactl set-default-sink virtual
       - run: npx playwright test
