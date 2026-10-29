@@ -1,9 +1,31 @@
 <!DOCTYPE html>
+<!--
+  Generador de Sonidos por Edad
+  SPDX-License-Identifier: AGPL-3.0-or-later
+  Textos: CC-BY-SA-4.0
+  © 2025-2026 Juan José de Haro
+-->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Sonidos por Edad</title>
+    <meta name="description" content="Genera tonos agudos para explorar cómo cambia la audición con la edad: un test con barrido de frecuencias y un modo manual por rangos de edad.">
+    <meta name="author" content="Juan José de Haro">
+    <link rel="icon" href="icono.svg" type="image/svg+xml">
+    <link rel="canonical" href="https://jjdeharo.github.io/generador-sonidos-edad/">
+    <link rel="license" href="https://www.gnu.org/licenses/agpl-3.0.html">
+    <!-- Vista previa al compartir (Open Graph) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jjdeharo.github.io/generador-sonidos-edad/">
+    <meta property="og:title" content="Generador de Sonidos por Edad">
+    <meta property="og:description" content="Tonos agudos para explorar cómo cambia la audición con la edad: test con barrido de frecuencias y modo manual.">
+    <meta property="og:image" content="https://jjdeharo.github.io/generador-sonidos-edad/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Pantalla de inicio del Generador de Sonidos por Edad, con el modo test y el modo manual">
+    <meta property="og:locale" content="es_ES">
+    <meta name="twitter:card" content="summary_large_image">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -42,13 +64,13 @@
             font-size: 16px;
             border: none;
             border-radius: 5px;
-            background-color: #3498db;
+            background-color: #1f6fa8;
             color: white;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #2980b9;
+            background-color: #185a8a;
         }
         .sound-info {
             margin-top: 30px;
@@ -60,7 +82,7 @@
             font-weight: bold;
             text-align: center;
             height: 24px;
-            color: #e74c3c;
+            color: #b03a2e;
         }
         .controls {
             display: flex;
@@ -68,13 +90,13 @@
             margin: 20px 0;
         }
         .controls button {
-            background-color: #e74c3c;
+            background-color: #b03a2e;
             margin: 0 10px;
             position: relative;
             overflow: hidden;
         }
         .controls button:hover {
-            background-color: #c0392b;
+            background-color: #922b21;
         }
         .controls button:active {
             transform: scale(0.98);
@@ -109,7 +131,7 @@
         }
         .note {
             font-size: 14px;
-            color: #7f8c8d;
+            color: #5d6b6d;
             margin-top: 20px;
             font-style: italic;
         }
@@ -128,10 +150,10 @@
             font-size: 18px;
             margin: 20px auto;
             display: block;
-            background-color: #2ecc71;
+            background-color: #1e7e46;
         }
         .big-button:hover {
-            background-color: #27ae60;
+            background-color: #186a3b;
         }
         .frequency-display {
             margin: 20px 0;
@@ -198,7 +220,7 @@
             font-size: 16px;
             padding: 12px 25px;
             text-align: center;
-            background-color: #3498db;
+            background-color: #1f6fa8;
             color: white;
             border: none;
             border-radius: 5px;
@@ -208,14 +230,14 @@
             margin: 0 auto;
         }
         .mode-button:hover {
-            background-color: #2980b9;
+            background-color: #185a8a;
         }
         .back-button {
-            background-color: #7f8c8d;
+            background-color: #5d6b6d;
             margin-top: 20px;
         }
         .back-button:hover {
-            background-color: #6c7a89;
+            background-color: #4a5657;
         }
         .app-title {
             font-size: 2.5em;
@@ -223,9 +245,29 @@
             color: #2c3e50;
             text-align: center;
         }
+        /* Foco visible al navegar con el teclado */
+        button:focus-visible, input:focus-visible, a:focus-visible {
+            outline: 3px solid #f39c12;
+            outline-offset: 2px;
+        }
+        .pie {
+            margin-top: 40px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #4a5657;
+            text-align: center;
+        }
+        .pie p {
+            margin: 4px 0;
+        }
+        .pie a {
+            color: #185a8a;
+        }
         .app-subtitle {
             text-align: center;
-            color: #7f8c8d;
+            color: #5d6b6d;
             margin-bottom: 30px;
         }
     </style>
@@ -275,7 +317,7 @@
                 <button onclick="playSound(8000, '50 años o más (casi todas las edades)')">Lo oyen casi todas las edades (50+) - 8,000 Hz</button>
             </div>
 
-            <div class="currently-playing" id="currently-playing"></div>
+            <div class="currently-playing" id="currently-playing" aria-live="polite"></div>
 
             <div class="controls">
                 <button onclick="stopSound()">Detener Sonido</button>
@@ -316,7 +358,7 @@
             <div class="test-section">
                 <div class="frequency-display" id="test-frequency">Frecuencia: <span id="current-frequency">-</span> Hz</div>
                 
-                <div class="progress-bar-container">
+                <div class="progress-bar-container" role="progressbar" aria-label="Progreso del test" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="test-progress-container">
                     <div class="progress-bar" id="test-progress"></div>
                 </div>
                 
@@ -324,7 +366,7 @@
                 <button class="big-button" id="hear-btn" onclick="hearSound()" style="display: none; background-color: #e74c3c;">¡Lo escucho!</button>
             </div>
 
-            <div class="result-area" id="test-results">
+            <div class="result-area" id="test-results" aria-live="polite" tabindex="-1">
                 <h2>Resultados del Test</h2>
                 <div id="results-content"></div>
             </div>
@@ -332,6 +374,17 @@
             <button class="back-button" onclick="showScreen('home-screen')">Volver al Inicio</button>
         </div>
     </div>
+
+    <footer class="pie">
+        <p><strong>Generador de Sonidos por Edad</strong> · © 2025-2026 <a href="https://bilateria.org" target="_blank" rel="noopener">Juan José de Haro</a> ·
+            <a href="https://github.com/jjdeharo/generador-sonidos-edad/releases" target="_blank" rel="noopener">versión 1.0.0</a></p>
+        <p>Código bajo licencia <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">AGPL v3</a> ·
+            textos bajo <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es" target="_blank" rel="noopener">CC BY-SA 4.0</a> ·
+            <a href="https://github.com/jjdeharo/generador-sonidos-edad" target="_blank" rel="noopener">código fuente</a></p>
+        <p>Hecho con IA (<a href="https://jjdeharo.github.io/miae/?nivel=4" target="_blank" rel="noopener">nivel 4 del MIAE</a>):
+            programado con Claude en junio de 2025 y preparado para su publicación con Claude Code en octubre de 2026.</p>
+        <p>Icono: «ear» de <a href="https://lucide.dev" target="_blank" rel="noopener">Lucide</a>, licencia ISC.</p>
+    </footer>
 
     <script>
         // Variables generales
@@ -544,6 +597,7 @@
             // Actualizar la interfaz
             document.getElementById('current-frequency').textContent = currentTestFrequency;
             document.getElementById('test-progress').style.width = `${progress * 100}%`;
+            document.getElementById('test-progress-container').setAttribute('aria-valuenow', Math.round(progress * 100));
             
             // Si el test ha terminado
             if (progress >= 1 && testRunning) {

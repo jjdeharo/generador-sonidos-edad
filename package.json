@@ -1,0 +1,15 @@
+{
+  "name": "generador-sonidos-edad",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tonos agudos para explorar cómo cambia la audición con la edad",
+  "license": "AGPL-3.0-or-later",
+  "author": "Juan José de Haro",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.64.1"
+  }
+}
